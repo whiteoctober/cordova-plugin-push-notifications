@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        id="uk.co.whiteoctober.cordova.push-notification" version="0.0.1">
+    <name>PushNotification</name>
+    <description>Cordova Push Notification Plugin</description>
+    <license>Apache 2.0</license>
+    <keywords>cordova,push,notification,gcm,apn</keywords>
+    <js-module src="www/push-notification.js" name="PushNotification" />
+
+    <!-- Android configuration -->
+    <platform name="android">
+
+        <!-- Permissions -->
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+            <uses-permission android:name="android.permission.INTERNET" />
+            <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+            <uses-permission android:name="android.permission.WAKE_LOCk" />
+            <uses-permission android:name="$PACKAGE_NAME.permission.C2D_MESSAGE" />
+        </config-file>
+
+        <!-- Receiver and service -->
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <receiver
+                android:name="com.google.android.gcm.GCMBroadcastReceiver"
+                android:permission="com.google.android.c2dm.permission.SEND" >
+                <intent-filter>
+                    <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                    <category android:name="$PACKAGE_NAME" />
+                </intent-filter>
+            </receiver>
+            <service android:name="uk.co.whiteoctober.cordova.GCMIntentService" />
+        </config-file>
+
+        <!-- Files -->
+        <source-file src="src/android/com/google/android/gcm/GCMBaseIntentService.java" target-dir="src/com/google/android/gcm" />
+        <source-file src="src/android/com/google/android/gcm/GCMBroadcastReceiver.java" target-dir="src/com/google/android/gcm" />
+        <source-file src="src/android/com/google/android/gcm/GCMConstants.java" target-dir="src/com/google/android/gcm" />
+        <source-file src="src/android/com/google/android/gcm/GCMRegistrar.java" target-dir="src/com/google/android/gcm" />
+        <source-file src="src/android/uk/co/whiteoctober/cordova/GCMPlugin.java" target-dir="src/uk/co/whiteoctober/cordova" />
+        <source-file src="src/android/uk/co/whiteoctober/cordova/GCMIntentService.java" target-dir="src/uk/co/whiteoctober/cordova" />
+    </platform>
+</plugin>
