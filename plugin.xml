@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-        id="uk.co.whiteoctober.cordova.push-notification" version="0.0.1">
+        id="uk.co.whiteoctober.cordova" version="0.0.1">
     <name>PushNotification</name>
     <description>Cordova Push Notification Plugin</description>
     <license>Apache 2.0</license>
     <keywords>cordova,push,notification,gcm,apn</keywords>
     <js-module src="www/push-notification.js" name="PushNotification" />
 
+    <engines>
+        <engine name="cordova" version=">=3.3.0"/>
+    </engines>
+
     <!-- Android configuration -->
     <platform name="android">
+
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="PushNotification">
+                <param name="android-package" value="uk.co.whiteoctober.cordova.PushNotificationPlugin" />
+            </feature>
+        </config-file>
 
         <!-- Permissions -->
         <config-file target="AndroidManifest.xml" parent="/manifest">
@@ -16,7 +26,7 @@
             <uses-permission android:name="android.permission.INTERNET" />
             <uses-permission android:name="android.permission.GET_ACCOUNTS" />
             <uses-permission android:name="android.permission.WAKE_LOCk" />
-            <uses-permission android:name="$PACKAGE_NAME.permission.C2D_MESSAGE" />
+            <uses-permission android:name="$PACKAGE_NAME.permission.C2D_MESSAGE" android:protectionLevel="signature" />
         </config-file>
 
         <!-- Receiver and service -->
