@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-        id="uk.co.whiteoctober.cordova" version="0.0.1">
+        id="uk.co.whiteoctober.cordova.PushNotification" version="0.0.1">
     <name>PushNotification</name>
     <description>Cordova Push Notification Plugin</description>
     <license>Apache 2.0</license>
