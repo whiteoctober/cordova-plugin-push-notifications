@@ -10,7 +10,7 @@ PushNotification.prototype = {
         options = this.merge(_options, options);
 
         cordova.exec(null, null, 'PushNotification', 'register', [options]);
-    }
+    },
 
     merge: function(base, incoming) {
         var output = base;
