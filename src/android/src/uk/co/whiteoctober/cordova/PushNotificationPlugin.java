@@ -209,6 +209,12 @@ public class PushNotificationPlugin extends CordovaPlugin {
                     // Require the user to click a button again, or perform
                     // exponential back-off.
                     Log.e(ME + ":registerInBackground", msg);
+                } catch (JSONException ex) {
+                    msg = "Error :" + ex.getMessage();
+                    // If there is an error, don't just keep trying to register.
+                    // Require the user to click a button again, or perform
+                    // exponential back-off.
+                    Log.e(ME + ":registerInBackground", msg);
                 }
 
                 return msg;
