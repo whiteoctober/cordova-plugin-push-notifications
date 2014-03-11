@@ -5,7 +5,9 @@
     <description>Cordova Push Notification Plugin</description>
     <license>Apache 2.0</license>
     <keywords>cordova,push,notification,gcm,apn</keywords>
-    <js-module src="www/push-notification.js" name="PushNotification" />
+    <js-module src="www/push-notification.js" name="PushNotification">
+        <clobbers target="plugin.notification.push" />
+    </js-module>
 
     <engines>
         <engine name="cordova" version=">=3.3.0"/>
