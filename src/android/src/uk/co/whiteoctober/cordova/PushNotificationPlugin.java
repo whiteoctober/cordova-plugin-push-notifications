@@ -15,6 +15,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import java.io.IOException;
+import java.lang.Void;
+import java.lang.String;
 
 import com.google.android.gcm.GCMRegistrar;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -219,6 +221,7 @@ public class PushNotificationPlugin extends CordovaPlugin {
                     // exponential back-off.
                     Log.e(ME + ":registerInBackground", msg);
                 }
+
                 return msg;
             }
 
