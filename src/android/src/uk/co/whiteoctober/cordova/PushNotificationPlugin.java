@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
+import java.io.IOException;
 
 import com.google.android.gcm.GCMRegistrar;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -182,8 +183,8 @@ public class PushNotificationPlugin extends CordovaPlugin {
      * Stores the registration ID and app versionCode in the application's
      * shared preferences.
      */
-    private void registerInBackground(String gSenderID) {
-        new AsyncTask() {
+    private void registerInBackground(final String gSenderID) {
+        new AsyncTask<Void, Void, Void>() {
             @Override
             protected String doInBackground(Void... params) {
                 String msg = "";
