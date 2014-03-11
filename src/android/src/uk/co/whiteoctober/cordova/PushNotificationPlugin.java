@@ -193,6 +193,16 @@ public class PushNotificationPlugin extends CordovaPlugin {
                     editor.putString("sender_id", regid);
                     editor.commit();
 
+                    json = new JSONObject().put("event", "registered");
+                    json.put("regid", registrationId);
+
+                    Log.v(ME + ":registerInBackground", json.toString());
+                    try {
+                        PushNotificationPlugin.sendJavascript(json);
+                    } catch (NullPointerException e) {
+                        Log.e(ME + ":onRegistered", "NullPointerException, maybe viewport is not active?");
+                    }
+
                 } catch (IOException ex) {
                     msg = "Error :" + ex.getMessage();
                     // If there is an error, don't just keep trying to register.
