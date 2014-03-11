@@ -13,9 +13,9 @@ import android.content.SharedPreferences;
 
 import com.google.android.gcm.GCMRegistrar;
 
-public class GCMPlugin extends CordovaPlugin {
+public class PushNotificationPlugin extends CordovaPlugin {
 
-    public static final String ME = "GCMPlugin";
+    public static final String ME = "PushNotificationPlugin";
     public static final String PREFERENCES_KEY = "CORDOVA_" + ME;
 
     public static final String REGISTER = "register";
@@ -30,7 +30,7 @@ public class GCMPlugin extends CordovaPlugin {
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
 
-        GCMPlugin.webView = webView;
+        PushNotificationPlugin.webView = webView;
     }
 
     @Override

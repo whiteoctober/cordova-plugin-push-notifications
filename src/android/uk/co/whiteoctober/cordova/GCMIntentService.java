@@ -31,7 +31,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
             Log.v(ME + ":onRegistered", json.toString());
             try {
-                GCMPlugin.sendJavascript(json);
+                PushNotificationPlugin.sendJavascript(json);
             } catch (NullPointerException e) {
                 Log.e(ME + ":onRegistered", "NullPointerException, maybe viewport is not active?");
             }
@@ -67,7 +67,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                 Log.v(ME + ":onMessage ", json.toString());
 
                 try {
-                    GCMPlugin.sendJavascript(json);
+                    PushNotificationPlugin.sendJavascript(json);
                 } catch (NullPointerException e) {
                     Log.v(ME + ":onMessage", "Null exception, never mind.");
                 }
@@ -86,7 +86,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
             Log.e(ME + ":onError ", json.toString());
 
-            GCMPlugin.sendJavascript(json);
+            PushNotificationPlugin.sendJavascript(json);
         } catch (JSONException e) {
             Log.e(ME + ":onMessage", "JSON exception");
         }
@@ -102,7 +102,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     @Override
     protected String[] getSenderIds(Context context) {
         String[] x = new String[1];
-        SharedPreferences settings = context.getSharedPreferences(GCMPlugin.PREFERENCES_KEY, 0);
+        SharedPreferences settings = context.getSharedPreferences(PushNotificationPlugin.PREFERENCES_KEY, 0);
         x[0] = settings.getString("senderID", "");
 
         return x;

@@ -49,7 +49,7 @@
         <source-file src="src/android/com/google/android/gcm/GCMBroadcastReceiver.java" target-dir="src/com/google/android/gcm" />
         <source-file src="src/android/com/google/android/gcm/GCMConstants.java" target-dir="src/com/google/android/gcm" />
         <source-file src="src/android/com/google/android/gcm/GCMRegistrar.java" target-dir="src/com/google/android/gcm" />
-        <source-file src="src/android/uk/co/whiteoctober/cordova/GCMPlugin.java" target-dir="src/uk/co/whiteoctober/cordova" />
+        <source-file src="src/android/uk/co/whiteoctober/cordova/PushNotificationPlugin.java" target-dir="src/uk/co/whiteoctober/cordova" />
         <source-file src="src/android/uk/co/whiteoctober/cordova/GCMIntentService.java" target-dir="src/uk/co/whiteoctober/cordova" />
     </platform>
 </plugin>
