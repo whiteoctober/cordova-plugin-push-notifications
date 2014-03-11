@@ -32,6 +32,8 @@ public class PushNotificationPlugin extends CordovaPlugin {
     private static String gECB;
     private static String gSenderID;
 
+    private GoogleCloudMessaging gcm;
+
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
@@ -53,10 +55,10 @@ public class PushNotificationPlugin extends CordovaPlugin {
                 Log.v(ME + ":execute", jo.toString());
                 gSenderID = (String) jo.get("sender_id");
 
-                GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
+                gcm = GoogleCloudMessaging.getInstance(context);
                 String regid = getRegistrationId(context);
                 if (regid.isEmpty()) {
-                    registerInBackground();
+                    registerInBackground(gSenderID);
                 } else {
                     Log.v(ME + ":execute", "success, registration ID is " + regid);
                 }
@@ -180,7 +182,7 @@ public class PushNotificationPlugin extends CordovaPlugin {
      * Stores the registration ID and app versionCode in the application's
      * shared preferences.
      */
-    private void registerInBackground() {
+    private void registerInBackground(String gSenderID) {
         new AsyncTask() {
             @Override
             protected String doInBackground(Void... params) {
@@ -189,7 +191,7 @@ public class PushNotificationPlugin extends CordovaPlugin {
                     if (gcm == null) {
                         gcm = GoogleCloudMessaging.getInstance(context);
                     }
-                    regid = gcm.register(SENDER_ID);
+                    String regid = gcm.register(gSenderID);
                     msg = "Device registered, registration ID=" + regid;
                     Log.v(ME + ":registerInBackground", msg);
 
@@ -219,9 +221,6 @@ public class PushNotificationPlugin extends CordovaPlugin {
                 return msg;
             }
 
-            @Override
-            protected void onPostExecute(String msg) {
-            }
         }.execute(null, null, null);
     }
 }
