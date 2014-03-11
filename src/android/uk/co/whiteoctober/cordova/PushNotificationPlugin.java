@@ -44,13 +44,12 @@ public class PushNotificationPlugin extends CordovaPlugin {
                 JSONObject jo = new JSONObject(args.toString().substring(1, args.toString().length() - 1));
 
                 Log.v(ME + ":execute", jo.toString());
-                gECB = (String) jo.get("ecb");
-                gSenderID = (String) jo.get("senderID");
+                gSenderID = (String) jo.get("sender_id");
 
                 // Store the sender ID in shared preferences, so we can retrieve it later
                 SharedPreferences settings = this.cordova.getActivity().getSharedPreferences(PREFERENCES_KEY, 0);
                 SharedPreferences.Editor editor = settings.edit();
-                editor.putString("senderID", gSenderID);
+                editor.putString("sender_id", gSenderID);
                 editor.commit();
 
                 final String regId = GCMRegistrar.getRegistrationId(this.cordova.getActivity());
@@ -58,8 +57,8 @@ public class PushNotificationPlugin extends CordovaPlugin {
                     GCMRegistrar.register(this.cordova.getActivity(), gSenderID);
                 } else {
                     Log.v(ME + ":execute", "GCM - already registered");
-                    JSONObject json = new JSONObject().put("event", "registered");
-                    json.put("regid", regId);
+                    JSONObject json = new JSONObject();
+                    json.put("registration_id", regId);
                     this.sendJavascript(json);
                 }
 
@@ -89,9 +88,9 @@ public class PushNotificationPlugin extends CordovaPlugin {
 
 
     public static void sendJavascript(JSONObject _json) {
-        String _d = "javascript:" + gECB + "(" + _json.toString() + ")";
-        Log.v(ME + ":sendJavascript", _d);
-
-        webView.sendJavascript(_d);
+//        String _d = "javascript:" + gECB + "(" + _json.toString() + ")";
+//        Log.v(ME + ":sendJavascript", _d);
+//
+//        webView.sendJavascript(_d);
     }
 }

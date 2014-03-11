@@ -1,9 +1,9 @@
 var PushNotification = function() {};
 
 PushNotification.prototype = {
-    register: function() {
+    register: function(senderID) {
         console.log("Calling cordova.exec");
-        cordova.exec(null, null, 'PushNotification', 'register', [{ ecb: "foo", senderID: "12345" }]);
+        cordova.exec(null, null, 'PushNotification', 'register', [{ sender_id: senderID }]);
     }
 }
 

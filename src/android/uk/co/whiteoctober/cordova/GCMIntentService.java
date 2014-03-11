@@ -103,7 +103,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     protected String[] getSenderIds(Context context) {
         String[] x = new String[1];
         SharedPreferences settings = context.getSharedPreferences(PushNotificationPlugin.PREFERENCES_KEY, 0);
-        x[0] = settings.getString("senderID", "");
+        x[0] = settings.getString("sender_id", "");
 
         return x;
     }
