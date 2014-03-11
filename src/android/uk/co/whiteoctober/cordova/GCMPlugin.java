@@ -1,6 +1,8 @@
 package uk.co.whiteoctober.cordova;
 
 import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.CordovaInterface;
+import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.CallbackContext;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,8 +21,17 @@ public class GCMPlugin extends CordovaPlugin {
     public static final String REGISTER = "register";
     public static final String UNREGISTER = "unregister";
 
+    private static CordovaWebView webView = null;
+
     private static String gECB;
     private static String gSenderID;
+
+    @Override
+    public void initialize(CordovaInterface cordova, CordovaWebView webView) {
+        super.initialize(cordova, webView);
+
+        GCMPlugin.webView = webView;
+    }
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
@@ -37,7 +48,7 @@ public class GCMPlugin extends CordovaPlugin {
                 gSenderID = (String) jo.get("senderID");
 
                 // Store the sender ID in shared preferences, so we can retrieve it later
-                SharedPreferences settings = this.ctx.getSharedPreferences(PREFERENCES_KEY, 0);
+                SharedPreferences settings = this.cordova.getActivity().getSharedPreferences(PREFERENCES_KEY, 0);
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString("senderID", gSenderID);
                 editor.commit();
@@ -81,6 +92,6 @@ public class GCMPlugin extends CordovaPlugin {
         String _d = "javascript:" + gECB + "(" + _json.toString() + ")";
         Log.v(ME + ":sendJavascript", _d);
 
-        super.webView.sendJavascript(_d);
+        webView.sendJavascript(_d);
     }
 }
