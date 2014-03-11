@@ -34,7 +34,7 @@
         <!-- Receiver and service -->
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <receiver
-                android:name="com.google.android.gcm.GCMBroadcastReceiver"
+                android:name="uk.co.whiteoctober.cordova.CordovaGCMBroadcastReceiver"
                 android:permission="com.google.android.c2dm.permission.SEND" >
                 <intent-filter>
                     <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
@@ -53,5 +53,6 @@
         <source-file src="src/android/src/com/google/android/gcm/GCMRegistrar.java" target-dir="src/com/google/android/gcm" />
         <source-file src="src/android/src/uk/co/whiteoctober/cordova/PushNotificationPlugin.java" target-dir="src/uk/co/whiteoctober/cordova" />
         <source-file src="src/android/src/uk/co/whiteoctober/cordova/GCMIntentService.java" target-dir="src/uk/co/whiteoctober/cordova" />
+        <source-file src="src/android/src/uk/co/whiteoctober/cordova/CordovaGCMBroadcastReceiver.java" target-dir="src/uk/co/whiteoctober/cordova" />
     </platform>
 </plugin>
