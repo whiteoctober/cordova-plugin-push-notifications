@@ -1,11 +1,18 @@
 var PushNotification = function() {};
 
 PushNotification.prototype = {
+    setup: function(options) {
+        var _options = {
+            event_callback: "",
+        };
+        options = this.merge(_options, options);
+
+        cordova.exec(null, null, 'PushNotification', 'setup', [options]);
+    },
+
     register: function(options) {
         var _options = {
             sender_id: "",
-            on_success: null,
-            on_failure: null
         };
         options = this.merge(_options, options);
 

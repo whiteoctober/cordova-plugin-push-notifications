@@ -26,14 +26,15 @@ public class PushNotificationPlugin extends CordovaPlugin {
     public static final String ME = "PushNotificationPlugin";
     public static final String PREFERENCES_KEY = "CORDOVA_" + ME;
 
+    public static final String SETUP = "setup";
     public static final String REGISTER = "register";
     public static final String UNREGISTER = "unregister";
 
     private static CordovaWebView webView = null;
     private Context context = null;
 
-    private static String gECB;
-    private static String gSenderID;
+    private static String eventCallback;
+    private static String senderID;
 
     private GoogleCloudMessaging gcm;
 
@@ -43,6 +44,7 @@ public class PushNotificationPlugin extends CordovaPlugin {
 
         PushNotificationPlugin.webView = webView;
         context = this.cordova.getActivity();
+        eventCallback = new String();
     }
 
     @Override
@@ -50,29 +52,41 @@ public class PushNotificationPlugin extends CordovaPlugin {
 
         Log.v(ME + ":execute", "action=" + action);
 
+        if (SETUP.equals(action)) {
+            JSONObject jo = new JSONObject(args.toString().substring(1, args.toString().length() - 1));
+            if (!jo.has("event_callback")) {
+                Log.e(ME + ":execute", "No event_callback specified");
+
+                return false;
+            }
+
+            try {
+                eventCallback = jo.getString("event_callback");
+                callbackContext.success();
+
+                return true;
+            } catch (JSONException e) {
+                return false;
+            }
+        }
+
         if (REGISTER.equals(action)) {
 
             try {
                 JSONObject jo = new JSONObject(args.toString().substring(1, args.toString().length() - 1));
 
                 Log.v(ME + ":execute", jo.toString());
-                gSenderID = jo.getString("sender_id");
-                if (gSenderID.isEmpty()) {
+                senderID = jo.getString("sender_id");
+                if (senderID.isEmpty()) {
                     return false;
                 }
 
                 gcm = GoogleCloudMessaging.getInstance(context);
                 String regid = getRegistrationId(context);
                 if (regid.isEmpty()) {
-                    registerInBackground(gSenderID);
+                    registerInBackground(senderID);
                 } else {
                     Log.v(ME + ":execute", "success, registration ID is " + regid);
-                    JSONObject json = new JSONObject(), params = new JSONObject();
-                    if (jo.getString("on_success") != null) {
-                        json.put("callback", jo.getString("on_success"));
-                        params.put("registration_id", regid);
-                        sendJavascript(json, params);
-                    }
                 }
 
                 callbackContext.success();
@@ -87,14 +101,13 @@ public class PushNotificationPlugin extends CordovaPlugin {
     }
 
     public static void sendJavascript(JSONObject json) throws JSONException {
-        sendJavascript(json, new JSONObject());
-    }
 
-    public static void sendJavascript(JSONObject json, JSONObject params) throws JSONException {
-
-        String js = "setTimeout(function() { " + json.getString("callback") + "(";
-        if (params.length() > 0) {
-            js += "\"" + params.toString() + "\"";
+        if (!eventCallback.length()) {
+            return;
+        }
+        String js = "setTimeout(function() { " + eventCallback + "(";
+        if (json.length() > 0) {
+            js += "\"" + json.toString() + "\"";
         }
         js += "); },0)";
         Log.v(ME + ":sendJavascript", js);
