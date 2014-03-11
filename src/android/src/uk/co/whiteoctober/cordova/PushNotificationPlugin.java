@@ -10,6 +10,10 @@ import org.json.JSONObject;
 
 import android.util.Log;
 import android.content.SharedPreferences;
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.AsyncTask;
 
 import com.google.android.gcm.GCMRegistrar;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -33,7 +37,7 @@ public class PushNotificationPlugin extends CordovaPlugin {
         super.initialize(cordova, webView);
 
         PushNotificationPlugin.webView = webView;
-        PushNotificationPlugin.context = this.cordova.getActivity();
+        context = this.cordova.getActivity();
     }
 
     @Override
@@ -68,7 +72,7 @@ public class PushNotificationPlugin extends CordovaPlugin {
         return false;
     }
 
-    @Override
+//    @Override
     public boolean executeOld(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
 
         Log.v(ME + ":executeOld", "action=" + action);
@@ -141,7 +145,7 @@ public class PushNotificationPlugin extends CordovaPlugin {
         SharedPreferences prefs = this.cordova.getActivity().getSharedPreferences(PREFERENCES_KEY, 0);
         String registrationId = prefs.getString("sender_id", "");
         if (registrationId.isEmpty()) {
-            Log.i(TAG, "Registration not found.");
+            Log.i(ME + ":getRegistrationId", "Registration not found.");
             return "";
         }
 
@@ -151,7 +155,7 @@ public class PushNotificationPlugin extends CordovaPlugin {
         int registeredVersion = prefs.getInt("app_version", Integer.MIN_VALUE);
         int currentVersion = getAppVersion(context);
         if (registeredVersion != currentVersion) {
-            Log.i(TAG, "App version changed.");
+            Log.i(ME + ":getRegistrationId", "App version changed.");
             return "";
         }
         return registrationId;
