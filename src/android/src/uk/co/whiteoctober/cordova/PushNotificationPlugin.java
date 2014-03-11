@@ -86,6 +86,10 @@ public class PushNotificationPlugin extends CordovaPlugin {
         return false;
     }
 
+    public static void sendJavascript(JSONObject json) throws JSONException {
+        sendJavascript(json, new JSONObject());
+    }
+
     public static void sendJavascript(JSONObject json, JSONObject params) throws JSONException {
 
         String js = "setTimeout(function() { " + json.getString("callback") + "(";
@@ -95,7 +99,7 @@ public class PushNotificationPlugin extends CordovaPlugin {
         js += "); },0)";
         Log.v(ME + ":sendJavascript", js);
 
-        if (webView) {
+        if (webView != null) { // FIXME
             webView.sendJavascript(js);
         }
     }
