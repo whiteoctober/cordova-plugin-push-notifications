@@ -186,7 +186,7 @@ public class PushNotificationPlugin extends CordovaPlugin {
      * shared preferences.
      */
     private void registerInBackground(final String gSenderID) {
-        new AsyncTask<Void, Void, Void>() {
+        new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
                 String msg = "";
@@ -225,6 +225,9 @@ public class PushNotificationPlugin extends CordovaPlugin {
                 return msg;
             }
 
-        }.execute(null, null, null);
+            @Override
+            protected void onPostExecute(String msg) {
+            }
+        }.execute();
     }
 }
