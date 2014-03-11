@@ -57,7 +57,7 @@ public class PushNotificationPlugin extends CordovaPlugin {
 
                 Log.v(ME + ":execute", jo.toString());
                 gSenderID = jo.getString("sender_id");
-                if (!gSenderID.isEmpty()) {
+                if (gSenderID.isEmpty()) {
                     return false;
                 }
 
