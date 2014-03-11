@@ -193,7 +193,7 @@ public class PushNotificationPlugin extends CordovaPlugin {
                     editor.putString("sender_id", regid);
                     editor.commit();
 
-                    json = new JSONObject().put("event", "registered");
+                    JSONObject json = new JSONObject().put("event", "registered");
                     json.put("regid", registrationId);
 
                     Log.v(ME + ":registerInBackground", json.toString());
