@@ -107,7 +107,7 @@ public class PushNotificationPlugin extends CordovaPlugin {
         }
         String js = "setTimeout(function() { " + eventCallback + "(";
         if (json.length() > 0) {
-            js += "\"" + json.toString() + "\"";
+            js += json.toString();
         }
         js += "); },0)";
         Log.v(ME + ":sendJavascript", js);
