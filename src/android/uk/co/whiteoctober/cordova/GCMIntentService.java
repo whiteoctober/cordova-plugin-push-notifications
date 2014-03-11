@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -100,8 +101,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
     @Override
     protected String[] getSenderIds(Context context) {
-        String[] x = new String[1];
-        x[0] = context.getResources().getString(R.string.gcmSenderID);
-        return x;
+        SharedPreferences settings = context.getSharedPreferences(GCMPlugin.PREFERENCES_KEY, 0);
+        return settings.getString("senderID");
     }
 }

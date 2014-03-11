@@ -7,24 +7,23 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
+import android.content.SharedPreferences;
 
 import com.google.android.gcm.GCMRegistrar;
 
 public class GCMPlugin extends CordovaPlugin {
 
     public static final String ME = "GCMPlugin";
+    public static final String PREFERENCES_KEY = "CORDOVA_" + ME;
 
     public static final String REGISTER = "register";
     public static final String UNREGISTER = "unregister";
 
-    public static Plugin gwebView;
     private static String gECB;
     private static String gSenderID;
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-
-        PluginResult result = null;
 
         Log.v(ME + ":execute", "action=" + action);
 
@@ -37,7 +36,13 @@ public class GCMPlugin extends CordovaPlugin {
                 gECB = (String) jo.get("ecb");
                 gSenderID = (String) jo.get("senderID");
 
-                final String regId = GCMRegistrar.getRegistrationId(this.ctx.getContext());
+                // Store the sender ID in shared preferences, so we can retrieve it later
+                SharedPreferences settings = this.ctx.getSharedPreferences(PREFERENCES_KEY, 0);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString("senderID", gSenderID);
+                editor.commit();
+
+                final String regId = GCMRegistrar.getRegistrationId(this.cordova.getActivity());
                 if (regId.equals("")) {
                     GCMRegistrar.register(this.cordova.getActivity(), gSenderID);
                 } else {
