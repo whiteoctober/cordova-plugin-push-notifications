@@ -57,6 +57,9 @@ public class PushNotificationPlugin extends CordovaPlugin {
 
                 Log.v(ME + ":execute", jo.toString());
                 gSenderID = (String) jo.get("sender_id");
+                if (!gSenderID.isEmpty()) {
+                    return false;
+                }
 
                 gcm = GoogleCloudMessaging.getInstance(context);
                 String regid = getRegistrationId(context);
@@ -64,6 +67,12 @@ public class PushNotificationPlugin extends CordovaPlugin {
                     registerInBackground(gSenderID);
                 } else {
                     Log.v(ME + ":execute", "success, registration ID is " + regid);
+                    JSONObject json = new JSONObject(), params = new JSONObject();
+                    if (jo.getString("on_success") != null) {
+                        json.put("callback", jo.getString("on_success"));
+                        params.put("registration_id", regid);
+                        sendJavascript(json, params);
+                    }
                 }
 
                 callbackContext.success();
@@ -77,65 +86,18 @@ public class PushNotificationPlugin extends CordovaPlugin {
         return false;
     }
 
-//    @Override
-    public boolean executeOld(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
+    public static void sendJavascript(JSONObject json, JSONObject params) throws JSONException {
 
-        Log.v(ME + ":executeOld", "action=" + action);
-
-        if (REGISTER.equals(action)) {
-
-            try {
-                JSONObject jo = new JSONObject(args.toString().substring(1, args.toString().length() - 1));
-
-                Log.v(ME + ":execute", jo.toString());
-                gSenderID = (String) jo.get("sender_id");
-
-                // Store the sender ID in shared preferences, so we can retrieve it later
-                SharedPreferences settings = this.cordova.getActivity().getSharedPreferences(PREFERENCES_KEY, 0);
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putString("sender_id", gSenderID);
-                editor.commit();
-
-                final String regId = GCMRegistrar.getRegistrationId(this.cordova.getActivity());
-                if (regId.equals("")) {
-                    GCMRegistrar.register(this.cordova.getActivity(), gSenderID);
-                } else {
-                    Log.v(ME + ":execute", "GCM - already registered");
-                    JSONObject json = new JSONObject();
-                    json.put("registration_id", regId);
-                    this.sendJavascript(json);
-                }
-
-                Log.v(ME + ":execute", "GCM register called");
-
-                callbackContext.success();
-                return true;
-
-            } catch (JSONException e) {
-                Log.e(ME, "Got JSON Exception " + e.getMessage());
-                return false;
-            }
+        String js = "setTimeout(function() { " + json.getString("callback") + "(";
+        if (params.length() > 0) {
+            js += "\"" + params.toString() + "\"";
         }
+        js += "); },0)";
+        Log.v(ME + ":sendJavascript", js);
 
-        if (UNREGISTER.equals(action)) {
-            GCMRegistrar.unregister(this.cordova.getActivity());
-            Log.v(ME + ":" + UNREGISTER, "GCM unregister called");
-
-            return true;
+        if (webView) {
+            webView.sendJavascript(js);
         }
-
-        // No idea what to do here
-        Log.e(ME, "Invalid action : " + action);
-
-        return false;
-    }
-
-
-    public static void sendJavascript(JSONObject _json) {
-//        String _d = "javascript:" + gECB + "(" + _json.toString() + ")";
-//        Log.v(ME + ":sendJavascript", _d);
-//
-//        webView.sendJavascript(_d);
     }
 
     /**
