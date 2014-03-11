@@ -101,7 +101,10 @@ public class GCMIntentService extends GCMBaseIntentService {
 
     @Override
     protected String[] getSenderIds(Context context) {
+        String[] x = new String[1];
         SharedPreferences settings = context.getSharedPreferences(GCMPlugin.PREFERENCES_KEY, 0);
-        return settings.getString("senderID", "");
+        x[0] = settings.getString("senderID", "");
+
+        return x;
     }
 }
