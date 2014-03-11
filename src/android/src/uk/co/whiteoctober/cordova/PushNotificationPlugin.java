@@ -112,8 +112,10 @@ public class PushNotificationPlugin extends CordovaPlugin {
         js += "); },0)";
         Log.v(ME + ":sendJavascript", js);
 
-        if (webView != null) { // FIXME
+        if (webView != null) {
             webView.sendJavascript(js);
+        } else {
+            Log.v(ME + ":sendJavascript", "webView is null, we should try again later..."); // FIXME
         }
     }
 
