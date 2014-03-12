@@ -30,6 +30,9 @@ public class PushNotificationPlugin extends CordovaPlugin {
     public static final String REGISTER = "register";
     public static final String UNREGISTER = "unregister";
 
+    public static final String PROPERTY_REGISTRATION_ID = "registration_id";
+    public static final String PROPERTY_APP_VERSION = "app_version";
+
     private static CordovaWebView webView = null;
     private Context context = null;
 
@@ -88,7 +91,7 @@ public class PushNotificationPlugin extends CordovaPlugin {
                 } else {
                     Log.v(ME + ":execute", "success, registration ID is " + regid);
                     JSONObject json = new JSONObject().put("event", "registered");
-                    json.put("registration_id", regid);
+                    json.put(PROPERTY_REGISTRATION_ID, regid);
                     sendJavascript(json);
                 }
 
@@ -132,7 +135,7 @@ public class PushNotificationPlugin extends CordovaPlugin {
      */
     private String getRegistrationId(Context context) {
         SharedPreferences prefs = this.cordova.getActivity().getSharedPreferences(PREFERENCES_KEY, 0);
-        String registrationId = prefs.getString("registration_id", "");
+        String registrationId = prefs.getString(PROPERTY_REGISTRATION_ID, "");
         if (registrationId.isEmpty()) {
             Log.i(ME + ":getRegistrationId", "Registration not found.");
             return "";
@@ -141,7 +144,7 @@ public class PushNotificationPlugin extends CordovaPlugin {
         // Check if app was updated; if so, it must clear the registration ID
         // since the existing regID is not guaranteed to work with the new
         // app version.
-        int registeredVersion = prefs.getInt("app_version", Integer.MIN_VALUE);
+        int registeredVersion = prefs.getInt(PROPERTY_APP_VERSION, Integer.MIN_VALUE);
         int currentVersion = getAppVersion(context);
         if (registeredVersion != currentVersion) {
             Log.i(ME + ":getRegistrationId", "App version changed.");
@@ -183,13 +186,10 @@ public class PushNotificationPlugin extends CordovaPlugin {
                     Log.v(ME + ":registerInBackground", msg);
 
                     // Persist the regID - no need to register again.
-                    SharedPreferences settings = context.getSharedPreferences(PREFERENCES_KEY, 0);
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putString("registration_id", regid);
-                    editor.commit();
+                    storeRegistrationID(context, regid);
 
                     JSONObject json = new JSONObject().put("event", "registered");
-                    json.put("registration_id", regid);
+                    json.put(PROPERTY_REGISTRATION_ID, regid);
 
                     Log.v(ME + ":registerInBackground", json.toString());
                     try {
@@ -219,5 +219,20 @@ public class PushNotificationPlugin extends CordovaPlugin {
             protected void onPostExecute(String msg) {
             }
         }.execute();
+    }
+
+    /**
+     * Store the registration ID against our application version
+     * in shared preferences
+     *
+     * @param context
+     * @param registrationID
+     */
+    private void storeRegistrationID(Context context, String registrationID) {
+        SharedPreferences settings = context.getSharedPreferences(PREFERENCES_KEY, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(PROPERTY_REGISTRATION_ID, registrationID);
+        editor.putInt(PROPERTY_APP_VERSION, getAppVersion(context));
+        editor.commit();
     }
 }
