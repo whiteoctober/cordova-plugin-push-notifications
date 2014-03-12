@@ -57,11 +57,12 @@ public class GCMIntentService extends GCMBaseIntentService {
         if (extras != null) {
             try {
                 JSONObject json = new JSONObject();
+                json.putString("event", "message");
 
                 Set<String> keys = extras.keySet();
                 for (String key : keys) {
                     Object o = extras.get(key);
-                    json.put(key, o.toString());
+                    json.put(key, o);
                 }
 
                 Log.v(ME + ":onMessage ", json.toString());
