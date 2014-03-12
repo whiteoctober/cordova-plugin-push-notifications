@@ -80,7 +80,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     @Override
     public void onError(Context context, String errorId) {
         try {
-            JSONObject json;
+            JSONObject json = new JSONObject();
             json.put("msg", errorId);
 
             Log.e(ME + ":onError ", json.toString());
