@@ -33,6 +33,10 @@ public class PushNotificationPlugin extends CordovaPlugin {
     public static final String PROPERTY_REGISTRATION_ID = "registration_id";
     public static final String PROPERTY_APP_VERSION = "app_version";
 
+    public static final String EVENT_REGISTERED = "registered";
+    public static final String EVENT_MESSAGE = "message";
+    public static final String EVENT_ERROR = "error";
+
     private static CordovaWebView webView = null;
     private Context context = null;
 
@@ -90,9 +94,9 @@ public class PushNotificationPlugin extends CordovaPlugin {
                     registerInBackground(senderID);
                 } else {
                     Log.v(ME + ":execute", "success, registration ID is " + regid);
-                    JSONObject json = new JSONObject().put("event", "registered");
+                    JSONObject json = new JSONObject();
                     json.put(PROPERTY_REGISTRATION_ID, regid);
-                    sendJavascript(json);
+                    sendJavascript(json, PushNotificationPlugin.EVENT_REGISTERED);
                 }
 
                 callbackContext.success();
@@ -106,11 +110,12 @@ public class PushNotificationPlugin extends CordovaPlugin {
         return false;
     }
 
-    public static void sendJavascript(JSONObject json) throws JSONException {
+    public static void sendJavascript(JSONObject json, String event) throws JSONException {
 
         if (eventCallback.length() == 0) {
             return;
         }
+        json.putString("event", event);
         String js = "setTimeout(function() { " + eventCallback + "(";
         if (json.length() > 0) {
             js += json.toString();
@@ -188,12 +193,12 @@ public class PushNotificationPlugin extends CordovaPlugin {
                     // Persist the regID - no need to register again.
                     storeRegistrationID(context, regid);
 
-                    JSONObject json = new JSONObject().put("event", "registered");
+                    JSONObject json = new JSONObject();
                     json.put(PROPERTY_REGISTRATION_ID, regid);
 
                     Log.v(ME + ":registerInBackground", json.toString());
                     try {
-                        PushNotificationPlugin.sendJavascript(json);
+                        PushNotificationPlugin.sendJavascript(json, PushNotificationPlugin.EVENT_REGISTERED);
                     } catch (NullPointerException e) {
                         Log.e(ME + ":onRegistered", "NullPointerException, maybe viewport is not active?");
                     }

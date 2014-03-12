@@ -31,7 +31,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
             Log.v(ME + ":onRegistered", json.toString());
             try {
-                PushNotificationPlugin.sendJavascript(json);
+                PushNotificationPlugin.sendJavascript(json, PushNotificationPlugin.EVENT_REGISTERED);
             } catch (NullPointerException e) {
                 Log.e(ME + ":onRegistered", "NullPointerException, maybe viewport is not active?");
             }
@@ -57,7 +57,6 @@ public class GCMIntentService extends GCMBaseIntentService {
         if (extras != null) {
             try {
                 JSONObject json = new JSONObject();
-                json.putString("event", "message");
 
                 Set<String> keys = extras.keySet();
                 for (String key : keys) {
@@ -68,7 +67,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                 Log.v(ME + ":onMessage ", json.toString());
 
                 try {
-                    PushNotificationPlugin.sendJavascript(json);
+                    PushNotificationPlugin.sendJavascript(json, PushNotificationPlugin.EVENT_MESSAGE);
                 } catch (NullPointerException e) {
                     Log.v(ME + ":onMessage", "Null exception, never mind.");
                 }
@@ -82,12 +81,11 @@ public class GCMIntentService extends GCMBaseIntentService {
     public void onError(Context context, String errorId) {
         try {
             JSONObject json;
-            json = new JSONObject().put("event", "error");
             json.put("msg", errorId);
 
             Log.e(ME + ":onError ", json.toString());
 
-            PushNotificationPlugin.sendJavascript(json);
+            PushNotificationPlugin.sendJavascript(json, PushNotificationPlugin.EVENT_ERROR);
         } catch (JSONException e) {
             Log.e(ME + ":onMessage", "JSON exception");
         }
