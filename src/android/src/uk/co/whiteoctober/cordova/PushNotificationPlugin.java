@@ -132,7 +132,7 @@ public class PushNotificationPlugin extends CordovaPlugin {
      */
     private String getRegistrationId(Context context) {
         SharedPreferences prefs = this.cordova.getActivity().getSharedPreferences(PREFERENCES_KEY, 0);
-        String registrationId = prefs.getString("sender_id", "");
+        String registrationId = prefs.getString("registration_id", "");
         if (registrationId.isEmpty()) {
             Log.i(ME + ":getRegistrationId", "Registration not found.");
             return "";
@@ -182,20 +182,10 @@ public class PushNotificationPlugin extends CordovaPlugin {
                     msg = "Device registered, registration ID=" + regid;
                     Log.v(ME + ":registerInBackground", msg);
 
-                    // You should send the registration ID to your server over HTTP,
-                    // so it can use GCM/HTTP or CCS to send messages to your app.
-                    // The request to your server should be authenticated if your app
-                    // is using accounts.
-//                    sendRegistrationIdToBackend();
-
-                    // For this demo: we don't need to send it because the device
-                    // will send upstream messages to a server that echo back the
-                    // message using the 'from' address in the message.
-
                     // Persist the regID - no need to register again.
                     SharedPreferences settings = context.getSharedPreferences(PREFERENCES_KEY, 0);
                     SharedPreferences.Editor editor = settings.edit();
-                    editor.putString("sender_id", regid);
+                    editor.putString("registration_id", regid);
                     editor.commit();
 
                     JSONObject json = new JSONObject().put("event", "registered");
