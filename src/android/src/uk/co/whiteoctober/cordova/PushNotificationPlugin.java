@@ -87,6 +87,9 @@ public class PushNotificationPlugin extends CordovaPlugin {
                     registerInBackground(senderID);
                 } else {
                     Log.v(ME + ":execute", "success, registration ID is " + regid);
+                    JSONObject json = new JSONObject().put("event", "registered");
+                    json.put("registration_id", regid);
+                    sendJavascript(json);
                 }
 
                 callbackContext.success();
@@ -196,7 +199,7 @@ public class PushNotificationPlugin extends CordovaPlugin {
                     editor.commit();
 
                     JSONObject json = new JSONObject().put("event", "registered");
-                    json.put("regid", regid);
+                    json.put("registration_id", regid);
 
                     Log.v(ME + ":registerInBackground", json.toString());
                     try {
